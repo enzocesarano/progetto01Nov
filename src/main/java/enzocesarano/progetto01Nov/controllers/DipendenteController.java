@@ -3,7 +3,9 @@ package enzocesarano.progetto01Nov.controllers;
 import enzocesarano.progetto01Nov.entities.Dipendente;
 import enzocesarano.progetto01Nov.entities.Prenotazione;
 import enzocesarano.progetto01Nov.payloads.DipendenteDTO;
+import enzocesarano.progetto01Nov.payloads.PrenotazioneDTO;
 import enzocesarano.progetto01Nov.services.DipendenteService;
+import enzocesarano.progetto01Nov.services.PrenotazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,9 @@ public class DipendenteController {
 
     @Autowired
     private DipendenteService dipendenteService;
+
+    @Autowired
+    private PrenotazioneService prenotazioneService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -51,6 +56,14 @@ public class DipendenteController {
 
     }
 
+    @PatchMapping("/{id_dipendente}/avatar")
+    @ResponseStatus(HttpStatus.OK)
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile file, @PathVariable UUID id_dipendente) {
+        return this.dipendenteService.updateAvatar(file, id_dipendente);
+    }
+
+    // EndPoint di prenotazioni dato l'id del dipendente.
+
     @GetMapping("/{id_dipendente}/prenotazioni")
     @ResponseStatus(HttpStatus.OK)
     public List<Prenotazione> getPrenotazioniByDipendente(@PathVariable UUID id_dipendente) {
@@ -58,10 +71,18 @@ public class DipendenteController {
         return prenotazioni;
     }
 
-    @PatchMapping("/{id_dipendente}/avatar")
+    // Creazione e modifica di una prenotazione delle prenotazioni SOLO per singolo Dipendente
+
+    @PostMapping("/{id_dipendente}/prenotazioni")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Prenotazione postPrenotazione(@RequestBody PrenotazioneDTO payload, @PathVariable UUID id_dipendente) {
+        return this.prenotazioneService.savePrenotazione(payload, id_dipendente);
+    }
+
+    @PutMapping("/{id_dipendente}/prenotazioni/{id_prenotazione}")
     @ResponseStatus(HttpStatus.OK)
-    public String uploadAvatar(@RequestParam("avatar") MultipartFile file, @PathVariable UUID id_dipendente) {
-        return this.dipendenteService.updateAvatar(file, id_dipendente);
+    public Prenotazione putPrenotazione(@PathVariable UUID id_dipendente, @RequestBody PrenotazioneDTO payload, @PathVariable UUID id_prenotazione) {
+        return this.prenotazioneService.findByIdAndUpdate(id_dipendente, payload, id_prenotazione);
     }
 }
 

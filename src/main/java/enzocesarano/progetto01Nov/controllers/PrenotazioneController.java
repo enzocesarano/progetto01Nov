@@ -1,7 +1,6 @@
 package enzocesarano.progetto01Nov.controllers;
 
 import enzocesarano.progetto01Nov.entities.Prenotazione;
-import enzocesarano.progetto01Nov.payloads.PrenotazioneDTO;
 import enzocesarano.progetto01Nov.services.PrenotazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +28,15 @@ public class PrenotazioneController {
         return this.prenotazioneService.findById(id_prenotazione);
     }
 
+    @DeleteMapping("/{id_prenotazione}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePrenotazione(@PathVariable UUID id_prenotazione) {
+        this.prenotazioneService.deletePrenotazione(id_prenotazione);
+    }
+
+    // Ho lasciato la possibilità di creare e modificare una prenotazione SOLO seguendo l'id di un dipendente,
+
+    /*
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Prenotazione postPrenotazione(@RequestBody PrenotazioneDTO payload) {
@@ -40,10 +48,6 @@ public class PrenotazioneController {
     public Prenotazione putPrenotazione(@PathVariable UUID id_prenotazione, @RequestBody PrenotazioneDTO payload) {
         return this.prenotazioneService.findByIdAndUpdate(id_prenotazione, payload);
     }
+    */
 
-    @DeleteMapping("/{id_prenotazione}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePrenotazione(@PathVariable UUID id_prenotazione) {
-        this.prenotazioneService.deletePrenotazione(id_prenotazione);
-    }
 }

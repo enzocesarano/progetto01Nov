@@ -37,11 +37,11 @@ public class PrenotazioneService {
         return this.prenotazioneRepository.findById(id_prenotazione).orElseThrow(() -> new NotFoundException(id_prenotazione));
     }
 
-    public Prenotazione savePrenotazione(PrenotazioneDTO payload) {
+    public Prenotazione savePrenotazione(PrenotazioneDTO payload, UUID id_dipendente) {
         Viaggio viaggio = this.viaggioService.findById(UUID.fromString(payload.id_viaggio()));
-        Dipendente dipendente = this.dipendenteService.findById(UUID.fromString(payload.id_dipendente()));
+        Dipendente dipendente = this.dipendenteService.findById(id_dipendente);
 
-        // avevo in mente il tipo di controllo che dovevo fare, dato che a me piace complicarmi la vita, ma ad un certo punto mi sono incasinato con le condizioni ç.ç
+        // Avevo in mente il tipo di controllo che dovevo fare, dato che a me piace complicarmi la vita, ma ad un certo punto mi sono incasinato con le condizioni ç.ç
         // Dal payload, prendo l'id del dipendente e lo salvo (se lo trova!)
         // da "dipendente" prendo la lista di prenotazioni e faccio un anyMach per confrontare le date di andata e ritorno dei viaggi esistenti con quelle
         // del viaggio che gli passo tramite payload.
@@ -59,13 +59,12 @@ public class PrenotazioneService {
         return this.prenotazioneRepository.save(newPrenotazione);
     }
 
-    public Prenotazione findByIdAndUpdate(UUID id_prenotazione, PrenotazioneDTO payload) {
+    public Prenotazione findByIdAndUpdate(UUID id_dipendente, PrenotazioneDTO payload, UUID id_prenotazione) {
+        Dipendente dipendente = this.dipendenteService.findById(id_dipendente);
         Prenotazione prenotazione = this.findById(id_prenotazione);
         prenotazione.setNote_dipendente(payload.note_dipendente());
 
-        // ho presupposto che una prenotazione come quella creata, potrebbe aver bisogno di una modifica solo delle note da parte del dipendente.
-        // Volessi cambiare il viaggio, converrebbe fare una nuova prenotazione e cancellare quella esistente.
-        // Lo stesso vale nel caso volessi cambiare il dipendente sulla prenotazione.
+        // ho presupposto che una prenotazione come quella creata, potrebbe aver bisogno di una modifica solo di note_dipendente da parte del dipendente.
         // Per annullare la prenotazione, c'è il delete. <.<
         return this.prenotazioneRepository.save(prenotazione);
     }
