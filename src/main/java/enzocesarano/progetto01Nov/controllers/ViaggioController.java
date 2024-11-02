@@ -1,6 +1,7 @@
 package enzocesarano.progetto01Nov.controllers;
 
 import enzocesarano.progetto01Nov.entities.Viaggio;
+import enzocesarano.progetto01Nov.payloads.StatoViaggioDTO;
 import enzocesarano.progetto01Nov.payloads.ViaggioDTO;
 import enzocesarano.progetto01Nov.services.ViaggioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +46,11 @@ public class ViaggioController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteViaggio(@PathVariable UUID id_viaggio) {
         this.viaggioService.deleteViaggio(id_viaggio);
+    }
+
+    @PatchMapping("/{id_viaggio}/stato")
+    @ResponseStatus(HttpStatus.OK)
+    public Viaggio updateViaggioStato(@PathVariable UUID id_viaggio, @RequestBody StatoViaggioDTO payload) {
+        return viaggioService.updateViaggioStato(id_viaggio, payload);
     }
 }

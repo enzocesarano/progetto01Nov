@@ -1,5 +1,7 @@
 package enzocesarano.progetto01Nov.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import enzocesarano.progetto01Nov.entities.Dipendente;
 import enzocesarano.progetto01Nov.entities.Prenotazione;
 import enzocesarano.progetto01Nov.exceptions.BadRequestException;
@@ -8,7 +10,9 @@ import enzocesarano.progetto01Nov.payloads.DipendenteDTO;
 import enzocesarano.progetto01Nov.repositories.DipendenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +20,9 @@ import java.util.UUID;
 public class DipendenteService {
     @Autowired
     private DipendenteRepository dipendenteRepository;
+
+    @Autowired
+    private Cloudinary cloudinaryUploader;
 
     public List<Dipendente> findAll() {
         return this.dipendenteRepository.findAll();
@@ -58,5 +65,18 @@ public class DipendenteService {
     public List<Prenotazione> findPrenotazioniByDipendenteId(UUID idDipendente) {
         Dipendente dipendente = this.findById(idDipendente);
         return dipendente.getPrenotazioni();
+    }
+
+    public String updateAvatar(MultipartFile file, UUID id_dipendente) {
+        Dipendente dipendente = this.findById(id_dipendente);
+        String url = null;
+        try {
+            url = (String) cloudinaryUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        } catch (IOException e) {
+            throw new BadRequestException("Ci sono stati problemi con l'upload dell'avatar!");
+        }
+        dipendente.setUrl_avatar(url);
+        this.dipendenteRepository.save(dipendente);
+        return url;
     }
 }

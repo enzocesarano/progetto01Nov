@@ -7,6 +7,7 @@ import enzocesarano.progetto01Nov.services.DipendenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -55,6 +56,12 @@ public class DipendenteController {
     public List<Prenotazione> getPrenotazioniByDipendente(@PathVariable UUID id_dipendente) {
         List<Prenotazione> prenotazioni = this.dipendenteService.findPrenotazioniByDipendenteId(id_dipendente);
         return prenotazioni;
+    }
+
+    @PatchMapping("/{id_dipendente}/avatar")
+    @ResponseStatus(HttpStatus.OK)
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile file, @PathVariable UUID id_dipendente) {
+        return this.dipendenteService.updateAvatar(file, id_dipendente);
     }
 }
 

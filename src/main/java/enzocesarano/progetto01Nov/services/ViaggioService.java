@@ -1,7 +1,9 @@
 package enzocesarano.progetto01Nov.services;
 
+import enzocesarano.progetto01Nov.entities.Enum.StatoViaggio;
 import enzocesarano.progetto01Nov.entities.Viaggio;
 import enzocesarano.progetto01Nov.exceptions.NotFoundException;
+import enzocesarano.progetto01Nov.payloads.StatoViaggioDTO;
 import enzocesarano.progetto01Nov.payloads.ViaggioDTO;
 import enzocesarano.progetto01Nov.repositories.ViaggioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +43,11 @@ public class ViaggioService {
     public void deleteViaggio(UUID id_viaggio) {
         Viaggio viaggio = this.findById(id_viaggio);
         this.viaggioRepository.delete(viaggio);
+    }
+
+    public Viaggio updateViaggioStato(UUID id_viaggio, StatoViaggioDTO payload) {
+        Viaggio viaggio = this.findById(id_viaggio);
+        viaggio.setStato_viaggio(StatoViaggio.valueOf(payload.stato_viaggio()));
+        return viaggioRepository.save(viaggio);
     }
 }
