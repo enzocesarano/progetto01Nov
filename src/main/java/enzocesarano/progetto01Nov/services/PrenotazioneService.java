@@ -48,12 +48,8 @@ public class PrenotazioneService {
         boolean prenotazioniSovrapposte = dipendente.getPrenotazioni().stream().anyMatch(prenotazione -> {
             LocalDate dataAndataEsistente = prenotazione.getViaggio().getData_andata();
             LocalDate dataRitornoEsistente = prenotazione.getViaggio().getData_ritorno();
-            return (viaggio.getData_andata().isAfter(dataAndataEsistente) &&
-                    viaggio.getData_andata().isBefore(dataRitornoEsistente)) ||
-                    (viaggio.getData_ritorno().isAfter(dataAndataEsistente) &&
-                            viaggio.getData_ritorno().isBefore(dataRitornoEsistente)) ||
-                    (viaggio.getData_andata().isBefore(dataRitornoEsistente) &&
-                            viaggio.getData_ritorno().isAfter(dataAndataEsistente));
+            return !(viaggio.getData_ritorno().isBefore(dataAndataEsistente) ||
+                    viaggio.getData_andata().isAfter(dataRitornoEsistente));
         });
         if (prenotazioniSovrapposte) {
             throw new IllegalStateException("Il dipendente ha già una prenotazione che si sovrappone alle date del viaggio selezionato.");
@@ -70,6 +66,7 @@ public class PrenotazioneService {
         // ho presupposto che una prenotazione come quella creata, potrebbe aver bisogno di una modifica solo delle note da parte del dipendente.
         // Volessi cambiare il viaggio, converrebbe fare una nuova prenotazione e cancellare quella esistente.
         // Lo stesso vale nel caso volessi cambiare il dipendente sulla prenotazione.
+        // Per annullare la prenotazione, c'è il delete. <.<
         return this.prenotazioneRepository.save(prenotazione);
     }
 

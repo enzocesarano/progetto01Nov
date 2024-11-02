@@ -1,6 +1,7 @@
 package enzocesarano.progetto01Nov.services;
 
 import enzocesarano.progetto01Nov.entities.Dipendente;
+import enzocesarano.progetto01Nov.entities.Prenotazione;
 import enzocesarano.progetto01Nov.exceptions.BadRequestException;
 import enzocesarano.progetto01Nov.exceptions.NotFoundException;
 import enzocesarano.progetto01Nov.payloads.DipendenteDTO;
@@ -28,6 +29,7 @@ public class DipendenteService {
         if (this.dipendenteRepository.existsByEmail(payload.email()))
             throw new BadRequestException("La mail è già in uso");
         Dipendente newDipendente = new Dipendente(payload.nome(), payload.cognome(), payload.email(), payload.data_nascita());
+        newDipendente.setUrl_avatar("https://ui-avatars.com/api/?name=" + payload.nome() + "+" + payload.cognome());
         return this.dipendenteRepository.save(newDipendente);
     }
 
@@ -42,6 +44,7 @@ public class DipendenteService {
         dipendente.setCognome(payload.cognome());
         dipendente.setEmail(payload.email());
         dipendente.setData_nascita(payload.data_nascita());
+        dipendente.setUrl_avatar("https://ui-avatars.com/api/?name=" + payload.nome() + "+" + payload.cognome());
 
         return this.dipendenteRepository.save(dipendente);
     }
@@ -49,5 +52,11 @@ public class DipendenteService {
     public void deleteDipendente(UUID id_dipendente) {
         Dipendente dipendente = this.findById(id_dipendente);
         this.dipendenteRepository.delete(dipendente);
+    }
+
+
+    public List<Prenotazione> findPrenotazioniByDipendenteId(UUID idDipendente) {
+        Dipendente dipendente = this.findById(idDipendente);
+        return dipendente.getPrenotazioni();
     }
 }

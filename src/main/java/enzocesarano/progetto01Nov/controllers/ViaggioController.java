@@ -4,6 +4,7 @@ import enzocesarano.progetto01Nov.entities.Viaggio;
 import enzocesarano.progetto01Nov.payloads.ViaggioDTO;
 import enzocesarano.progetto01Nov.services.ViaggioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,26 +18,31 @@ public class ViaggioController {
     private ViaggioService viaggioService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<Viaggio> getViaggi() {
         return this.viaggioService.findAll();
     }
 
     @GetMapping("/{id_viaggio}")
+    @ResponseStatus(HttpStatus.OK)
     public Viaggio getViaggio(@PathVariable UUID id_viaggio) {
         return this.viaggioService.findById(id_viaggio);
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Viaggio postViaggio(@RequestBody ViaggioDTO payload) {
         return this.viaggioService.saveViaggio(payload);
     }
 
     @PutMapping("/{id_viaggio}")
+    @ResponseStatus(HttpStatus.OK)
     public Viaggio putViaggio(@PathVariable UUID id_viaggio, @RequestBody ViaggioDTO payload) {
         return this.viaggioService.findByIdAndUpdate(id_viaggio, payload);
     }
 
     @DeleteMapping("/{id_viaggio}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteViaggio(@PathVariable UUID id_viaggio) {
         this.viaggioService.deleteViaggio(id_viaggio);
     }

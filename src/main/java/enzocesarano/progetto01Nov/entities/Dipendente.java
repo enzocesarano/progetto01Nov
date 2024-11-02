@@ -36,6 +36,5 @@ public class Dipendente {
         this.cognome = cognome;
         this.email = email;
         this.data_nascita = data_nascita;
-        this.url_avatar = "https://ui-avatars.com/api/?name=" + this.getNome() + "+" + this.getCognome();
     }
 }
