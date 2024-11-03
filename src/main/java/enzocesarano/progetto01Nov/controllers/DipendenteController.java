@@ -7,6 +7,7 @@ import enzocesarano.progetto01Nov.payloads.PrenotazioneDTO;
 import enzocesarano.progetto01Nov.services.DipendenteService;
 import enzocesarano.progetto01Nov.services.PrenotazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,8 +27,9 @@ public class DipendenteController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Dipendente> getDipendenti() {
-        return this.dipendenteService.findAll();
+    public Page<Dipendente> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+                                    @RequestParam(defaultValue = "nome") String sortBy) {
+        return this.dipendenteService.findAll(page, size, sortBy);
     }
 
     @GetMapping("/{id_dipendente}")

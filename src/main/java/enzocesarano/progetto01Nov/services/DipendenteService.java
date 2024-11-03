@@ -9,6 +9,10 @@ import enzocesarano.progetto01Nov.exceptions.NotFoundException;
 import enzocesarano.progetto01Nov.payloads.DipendenteDTO;
 import enzocesarano.progetto01Nov.repositories.DipendenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,8 +28,10 @@ public class DipendenteService {
     @Autowired
     private Cloudinary cloudinaryUploader;
 
-    public List<Dipendente> findAll() {
-        return this.dipendenteRepository.findAll();
+    public Page<Dipendente> findAll(int page, int size, String sortBy) {
+        if (size > 20) size = 20;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return this.dipendenteRepository.findAll(pageable);
     }
 
     public Dipendente findById(UUID id_dipendente) {

@@ -3,10 +3,10 @@ package enzocesarano.progetto01Nov.controllers;
 import enzocesarano.progetto01Nov.entities.Prenotazione;
 import enzocesarano.progetto01Nov.services.PrenotazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,8 +18,9 @@ public class PrenotazioneController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Prenotazione> getPrenotazioni() {
-        return this.prenotazioneService.findAll();
+    public Page<Prenotazione> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+                                      @RequestParam(defaultValue = "dataPrenotazione") String sortBy) {
+        return this.prenotazioneService.findAll(page, size, sortBy);
     }
 
     @GetMapping("/{id_prenotazione}")

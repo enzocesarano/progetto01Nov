@@ -5,10 +5,10 @@ import enzocesarano.progetto01Nov.payloads.StatoViaggioDTO;
 import enzocesarano.progetto01Nov.payloads.ViaggioDTO;
 import enzocesarano.progetto01Nov.services.ViaggioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -20,8 +20,9 @@ public class ViaggioController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Viaggio> getViaggi() {
-        return this.viaggioService.findAll();
+    public Page<Viaggio> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+                                 @RequestParam(defaultValue = "destinazione") String sortBy) {
+        return this.viaggioService.findAll(page, size, sortBy);
     }
 
     @GetMapping("/{id_viaggio}")

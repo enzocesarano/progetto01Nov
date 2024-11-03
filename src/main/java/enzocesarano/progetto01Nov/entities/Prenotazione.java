@@ -19,7 +19,11 @@ public class Prenotazione {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id_prenotazione;
 
-    private LocalDate data_prenotazione;
+    // Uso lo snake_case ovunque ma a quanto pare a Spring Data non va tanto a genio.
+    // @RequestParam(defaultValue = "data_prenotazione") String sortBy    <----    non ne voleva sapere di funzionare!
+
+    @Column(name = "data_prenotazione")
+    private LocalDate dataPrenotazione;
     private String note_dipendente;
 
     @OneToOne
@@ -36,6 +40,6 @@ public class Prenotazione {
         this.note_dipendente = note_dipendente;
         this.viaggio = viaggio;
         this.dipendente = dipendente;
-        this.data_prenotazione = LocalDate.now();
+        this.dataPrenotazione = LocalDate.now();
     }
 }
